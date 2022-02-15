@@ -19,6 +19,7 @@ class CreateRecipientsTable extends Migration
             $table->foreignId('message_id')->nullable()->constrained('messages')->cascadeOnDelete();
             $table->timestamp('read_at')->nullable();
             $table->softDeletes();
+            $table->primary(['user_id','message_id']);
         });
     }
 

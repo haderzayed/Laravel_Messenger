@@ -17,6 +17,7 @@ class CreateConversationsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete(); // مين اليوزر الي انشأ المحادثه
             $table->string('label')->nullable();
+            $table->enum('type',['peer','group'])->default('peer');
             $table->timestamps();
         });
     }
