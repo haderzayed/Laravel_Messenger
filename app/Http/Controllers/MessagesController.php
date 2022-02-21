@@ -17,14 +17,23 @@ class MessagesController extends Controller
     public function index($id)
     {
         $user=Auth::user();
-        $conversation=$user->conversations->findOrFail($id);
-        $conversation->messages()->paginate();
+        $conversation=$user->conversations()
+            ->with(['participants'=>function($builder)use($user){
+                $builder->where('id','<>',$user->id);
+            }])
+            ->find($id);
+
+       return [
+           'conversation'=> $conversation,
+           'messages'=> $conversation->messages()->with('user')->paginate()
+        ];
 
     }
 
 
     public function store(Request $request)
     {
+
         $request->validate([
            'message'=>['required','string'],
             'conversation_id'=>[
@@ -42,14 +51,14 @@ class MessagesController extends Controller
                 'exists:users,id'
             ]
         ]);
-        $user=User::find(1);//Auth::user();
+        $user=Auth::user();
         $conversation_id=$request->post('conversation_id');
         $user_id=$request->post('user_id');
 
         DB::beginTransaction();
         try{
             if($conversation_id){
-                $conversation=$user->conversations->findOrFail($conversation_id);
+                $conversation=$user->conversations->find($conversation_id);
                 //return conversation that user belong to
             }else{
                 //in case peer conversation , return the Auth user and user_id
@@ -86,7 +95,7 @@ class MessagesController extends Controller
                'last_message_id'=>$message->id,
             ]);
             DB::commit();
-
+           $message->load('user');
             broadcast(new MessageCreated($message));
 
         }catch (Throwable $exception){

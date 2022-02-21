@@ -36,4 +36,8 @@ class MessageCreated implements ShouldBroadcast
 
         return new PresenceChannel('Messenger.' . $other_user->id);
     }
+    public function broadcastAs(){
+
+        return 'new-message';
+    }
 }
