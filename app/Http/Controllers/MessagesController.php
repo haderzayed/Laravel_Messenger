@@ -17,7 +17,7 @@ class MessagesController extends Controller
     public function index($id)
     {
         $user=Auth::user();
-        $conversation=$user->conversations()
+        $conversation=$user->conversations() //return conversation of user
             ->with(['participants'=>function($builder)use($user){
                 $builder->where('id','<>',$user->id);
             }])

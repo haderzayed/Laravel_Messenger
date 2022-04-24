@@ -76,6 +76,7 @@ const addMessage=function(msg ,c=''){
                             </div>`);
 }
 
+//get conversations
 const  getConversations=function (){
         $.get(
           '/api/conversations',
@@ -86,6 +87,7 @@ const  getConversations=function (){
             });
 }
 
+//list conversations
 const conversation=function (chat){
     $('#chat-list').append(`
              <a href="#${chat.id}" data-messages="${chat.id}" class="card border-0 text-reset">
@@ -131,7 +133,66 @@ const conversation=function (chat){
      })
  })
 
+//get friends
+ const  getFriends=function (){
+     $.get(
+         '/api/friends',
+         function (response){
+             for(i in response){
+                 friend(response[i]);
+             }
+         });
+ }
+
+ //list friends
+ const friend=function (friend){
+     $('#friends_list').append(`
+           <a href="#${friend.id}" data-messages="${friend.id}" class="card border-0 text-reset">
+                                   <div class="card border-0">
+                            <div class="card-body">
+
+                                <div class="row align-items-center gx-5">
+                                    <div class="col-auto">
+                                        <a href="#" class="avatar ">
+                                            <img class="avatar-img" src="${friend.avatar_url}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="col">
+                                        <h5><a href="#">${friend.name}</a></h5>
+                                        <p>${friend.last_seen}</p>
+                                    </div>
+
+                                    <div class="col-auto">
+                                        <!-- Dropdown -->
+                                        <div class="dropdown">
+                                            <a class="icon text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                                            </a>
+
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="{{'api.messages.store'}}">New message</a></li>
+                                                <li><a class="dropdown-item" href="#">Edit contact</a>
+                                                </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item text-danger" href="#">Block user</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                                </a>`);
+ }
 
 $(document).ready(function (){
+
     getConversations();
+
+    getFriends();
 });

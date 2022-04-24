@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class ConversationsController extends Controller
 {
+
+
     public function index()
     {
         $user = Auth::user();
+
         return $user->conversations()->with([
             'lastMessage',
             'participants'=>function($builder)use($user){
